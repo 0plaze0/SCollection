@@ -1,13 +1,11 @@
 import "dotenv/config";
 
-console.log(process.env.MONGO_URI);
-
 interface ENV {
   MONGO_URI: string | undefined;
 }
 
 interface Config {
-  MONGO_URI: string | undefined;
+  MONGO_URI: string;
 }
 
 const getConfig = (): ENV => ({
