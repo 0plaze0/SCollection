@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { User } from "../types/user";
 import { Input } from "../components";
+import { api } from "../api/api";
 const Register = () => {
   const [formData, setFormData] = useState<User>({
     name: "",
@@ -19,6 +20,9 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      const result: { success: boolean; message: string; user: object } =
+        await api.post("/api/v1/auth/register", formData);
+      if (result.success) console.log(result.message);
     } catch (error) {
       console.log(error);
     }
