@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { Pagenotfound, Register } from "./pages";
+import { Login, Pagenotfound, Register } from "./pages";
 import { Layout } from "./components";
 
 const App = () => {
@@ -9,6 +9,7 @@ const App = () => {
         <Route path="/" element={<Layout />}>
           <Route index element={<h1>Hello</h1>} />
           <Route path="register" element={<Register />} />
+          <Route path="login" element={<Login />} />
         </Route>
         <Route path="*" element={<Pagenotfound />} />
       </Routes>
