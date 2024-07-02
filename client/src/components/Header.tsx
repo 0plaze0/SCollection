@@ -166,7 +166,7 @@ const Header = () => {
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <NavLink
-            to="/register"
+            to="login"
             className="text-sm font-semibold leading-6 text-gray-900"
           >
             Log in <span aria-hidden="true">&rarr;</span>

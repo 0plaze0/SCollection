@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { User } from "../types/user";
 import { Input } from "../components";
 import { api } from "../api/api";
+import { toast } from "react-toastify";
 const Register = () => {
   const [formData, setFormData] = useState<User>({
     name: "",
@@ -12,6 +14,8 @@ const Register = () => {
     password: "",
   });
 
+  const navigate = useNavigate();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value }: { name: string; value: string } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -20,9 +24,11 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const result: { success: boolean; message: string; user: object } =
-        await api.post("/api/v1/auth/register", formData);
-      if (result.success) console.log(result.message);
+      const { data } = await api.post("/api/v1/auth/register", formData);
+      if (data.success) {
+        navigate("/login");
+        toast.success(data.message);
+      }
     } catch (error) {
       console.log(error);
     }
