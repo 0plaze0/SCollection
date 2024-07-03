@@ -2,14 +2,17 @@ import "dotenv/config";
 
 interface ENV {
   MONGO_URI: string | undefined;
+  SALT_ROUND: string | undefined;
 }
 
 interface Config {
   MONGO_URI: string;
+  SALT_ROUND: string;
 }
 
 const getConfig = (): ENV => ({
   MONGO_URI: process.env.MONGO_URI,
+  SALT_ROUND: process.env.SALT_ROUND,
 });
 
 const getSatinizedConfig = (config: ENV): Config => {
