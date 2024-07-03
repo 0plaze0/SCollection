@@ -1,9 +1,10 @@
 import express from "express";
 import { dataValidation } from "../middlewares/validation";
-import { createUser } from "./../controllers/authController";
-import { userRegistrationSchema } from "../schemas/userSchemas";
+import { authUser, createUser } from "./../controllers/authController";
+import { userAuthSchema, userRegistrationSchema } from "../schemas/userSchemas";
 const router = express.Router();
 
 router.post("/register", dataValidation(userRegistrationSchema), createUser);
+router.post("/login", dataValidation(userAuthSchema), authUser);
 
 export default router;
