@@ -1,13 +1,6 @@
 import { Product } from "../../types/product";
 
-const ProductCard = ({
-  id,
-  name,
-  href,
-  price,
-  imageSrc,
-  imageAlt,
-}: Product) => {
+const ProductCard = ({ name, href, price, imageSrc, imageAlt }: Product) => {
   return (
     <>
       <a href={href} className="group">
