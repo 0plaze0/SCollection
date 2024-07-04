@@ -1,5 +1,11 @@
 import { Routes, Route } from "react-router-dom";
-import { Login, Pagenotfound, ProductList, Register } from "./pages";
+import {
+  ForgotPassword,
+  Login,
+  Pagenotfound,
+  ProductList,
+  Register,
+} from "./pages";
 import { Layout } from "./components";
 
 const App = () => {
@@ -10,6 +16,7 @@ const App = () => {
           <Route index element={<ProductList />} />
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
+          <Route path="forgot-password" element={<ForgotPassword />} />
         </Route>
         <Route path="*" element={<Pagenotfound />} />
       </Routes>

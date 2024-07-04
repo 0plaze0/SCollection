@@ -8,6 +8,7 @@ export const userRegistrationSchema = z.object({
   phone: z.string(),
   email: z.string().email(),
   password: z.string().min(5),
+  answer: z.string(),
 });
 export const userAuthSchema = z.object({
   email: z.string().email(),

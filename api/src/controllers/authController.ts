@@ -8,7 +8,7 @@ import config from "../config/config";
 
 const createUser = async (req: Request<{}, {}, User>, res: Response) => {
   try {
-    const { name, email, address, password, phone } = req.body;
+    const { name, email, address, password, phone, answer } = req.body;
 
     //hash password
     const salt = await parseInt(config.SALT_ROUND);
@@ -20,6 +20,7 @@ const createUser = async (req: Request<{}, {}, User>, res: Response) => {
       address,
       phone,
       password: hashpwd,
+      answer,
     };
 
     const user = await userModel.create(newUser);
@@ -80,4 +81,44 @@ const authUser = async (req: Request, res: Response) => {
   }
 };
 
-export { authUser, createUser };
+const forgotPassword = async (req: Request, res: Response) => {
+  try {
+    const {
+      email,
+      newPassword,
+      answer,
+    }: { email: string; newPassword: string; answer: string } = req.body;
+
+    if (!email || !newPassword || !answer)
+      return res
+        .status(404)
+        .send({ success: false, message: "Please Provide all field" });
+
+    const user = await userModel.findOne({ email, answer });
+
+    if (!user)
+      return res
+        .status(404)
+        .send({ success: false, message: "Either email or password is wrong" });
+
+    //hash password
+    const salt = await parseInt(config.SALT_ROUND);
+    const hashpwd = await hashPassword(newPassword, salt);
+
+    const updateUser = await userModel.findByIdAndUpdate(user._id, {
+      password: hashpwd,
+    });
+
+    res.status(200).send({
+      success: true,
+      message: "Password Successfully Updated!",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Error while Reseting Password",
+    });
+  }
+};
+export { authUser, createUser, forgotPassword };

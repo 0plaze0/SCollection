@@ -12,6 +12,7 @@ const Register = () => {
     address: "",
     email: "",
     password: "",
+    answer: "",
   });
 
   const navigate = useNavigate();
@@ -86,6 +87,14 @@ const Register = () => {
               handleChange={handleChange}
               value={formData.password}
               type="password"
+            />
+            <Input
+              title="Security question, Your Favourite color?"
+              name="answer"
+              id="answer"
+              handleChange={handleChange}
+              value={formData.answer}
+              type="text"
             />
 
             <div>

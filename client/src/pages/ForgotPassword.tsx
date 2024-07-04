@@ -1,17 +1,20 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { Input } from "../components";
 import { api } from "../api/api";
 import { toast } from "react-toastify";
 
-const Login = () => {
-  const [formData, setFormData] = useState<{ email: string; password: string }>(
-    {
-      email: "",
-      password: "",
-    }
-  );
+const ForgotPassword = () => {
+  const [formData, setFormData] = useState<{
+    email: string;
+    answer: string;
+    newPassword: string;
+  }>({
+    email: "",
+    answer: "",
+    newPassword: "",
+  });
 
   const navigate = useNavigate();
 
@@ -23,9 +26,9 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const { data } = await api.post("/api/v1/auth/login", formData);
+      const { data } = await api.post("/api/v1/auth/reset-password", formData);
       if (data.success) {
-        navigate("/");
+        navigate("/login");
         toast.success(data.message);
       }
     } catch (error) {
@@ -53,26 +56,24 @@ const Login = () => {
                 value={formData.email}
                 type="email"
               />
+              {/* Email */}
+              <Input
+                title="Secruity Answer. What your favorite Color?"
+                name="answer"
+                id="answer"
+                handleChange={handleChange}
+                value={formData.answer}
+                type="text"
+              />
               {/* Password */}
               <Input
-                title="Password"
-                name="password"
-                id="passoword"
+                title="New Password"
+                name="newPassword"
+                id="newPassword"
                 handleChange={handleChange}
-                value={formData.password}
+                value={formData.newPassword}
                 type="password"
               />
-              <div className="text-right">
-                <button
-                  type="button"
-                  className="font-semibold text-indigo-600 hover:text-indigo-500"
-                  onClick={() => {
-                    navigate("/forgot-password");
-                  }}
-                >
-                  Forgot password?
-                </button>
-              </div>
             </div>
 
             <div>
@@ -80,24 +81,14 @@ const Login = () => {
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Sign in
+                Submit
               </button>
             </div>
           </form>
-
-          <p className="mt-10 text-center text-sm text-gray-500">
-            Not a member?{" "}
-            <Link
-              to="/register"
-              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
-            >
-              Create your account
-            </Link>
-          </p>
         </div>
       </div>
     </>
   );
 };
 
-export default Login;
+export default ForgotPassword;
