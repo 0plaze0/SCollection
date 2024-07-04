@@ -4,6 +4,7 @@ import {
   Login,
   Pagenotfound,
   ProductList,
+  ProductPage,
   Register,
 } from "./pages";
 import { Layout } from "./components";
@@ -17,6 +18,7 @@ const App = () => {
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
+          <Route path="product-details/:id" element={<ProductPage />} />
         </Route>
         <Route path="*" element={<Pagenotfound />} />
       </Routes>
