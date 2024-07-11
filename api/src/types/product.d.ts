@@ -4,6 +4,6 @@ export interface Product {
   description: string;
   category: string;
   quantity: string;
-  image: string;
+  image: { id: string; url: string };
   shipping: string;
 }
