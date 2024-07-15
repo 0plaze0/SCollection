@@ -7,11 +7,27 @@ import { connectDB } from "./config/connectDB";
 
 import auth from "./routes/auth";
 import product from "./routes/product";
+import {
+  ErrorRequestHandler,
+  Request,
+  Response,
+  NextFunction,
+} from "express-serve-static-core";
 
 connectDB();
 
 const app = express();
 const PORT = 3000;
+
+export class HttpException extends Error {
+  public status: number;
+  public message: string;
+  constructor(status: number, message: string) {
+    super(message);
+    this.status = status;
+    this.message = message;
+  }
+}
 
 //middleware
 app.use(express.json());
@@ -20,6 +36,17 @@ app.use(cors());
 
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/product", product);
+app.use("*", async (req, res, next) => {
+  const err = new HttpException(404, `cannot find ${req.originalUrl} url`);
+  next(err);
+});
+
+//error handler
+app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
+  if (error instanceof HttpException) {
+    res.status(error.status).json({ message: error.message });
+  }
+});
 
 mongoose.connection.once("open", () => {
   console.log("connected to mongoose");
