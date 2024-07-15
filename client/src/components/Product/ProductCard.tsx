@@ -1,14 +1,20 @@
 import { Link } from "react-router-dom";
 import { Product } from "../../types/product";
 
-const ProductCard = ({ id, name, price, imageSrc, imageAlt }: Product) => {
+const ProductCard = ({
+  _id,
+  name,
+  price,
+
+  image,
+}: Product) => {
   return (
     <>
-      <Link to={`/product-details/${id}`} className="group">
+      <Link to={`/product-details/${_id}`} className="group">
         <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
           <img
-            src={imageSrc}
-            alt={imageAlt}
+            src={image?.url}
+            alt={image?.id}
             className="h-full w-full object-cover object-center group-hover:opacity-75"
           />
         </div>

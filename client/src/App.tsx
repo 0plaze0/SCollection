@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import {
+  AdminDashboard,
   ForgotPassword,
   Login,
   Pagenotfound,
@@ -8,6 +9,7 @@ import {
   Register,
 } from "./pages";
 import { Layout } from "./components";
+import ProductForm from "./components/Form/ProductForm";
 
 const App = () => {
   return (
@@ -17,8 +19,14 @@ const App = () => {
           <Route index element={<ProductList />} />
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
+          <Route path="login" element={<Login />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
           <Route path="product-details/:id" element={<ProductPage />} />
+          <Route path="admin" element={<AdminDashboard />}>
+            <Route path="dashboard" element={<ProductForm />} />
+            <Route path="create-product" element={<h1>Create Product</h1>} />
+            <Route path="create-category" element={<h1>Create category</h1>} />
+          </Route>
         </Route>
         <Route path="*" element={<Pagenotfound />} />
       </Routes>
