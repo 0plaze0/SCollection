@@ -8,7 +8,7 @@ import {
 } from "./../controllers/productController";
 import { productSchema } from "../schemas/productSchema";
 import { upload } from "../config/multer";
-import { isLoggedIn } from "../middleware/authMiddleware";
+import { isAdmin, isLoggedIn } from "../middleware/authMiddleware";
 
 const router = express.Router();
 
@@ -22,7 +22,7 @@ router.post(
 router.put("/update-product/:id", upload.single("file"), updateProduct);
 router.get("/get-product", getAllProduct);
 router.get("/get-product/:id", getProduct);
-router.get("/test-user", isLoggedIn, async (req, res) => {
+router.get("/test-user", isLoggedIn, isAdmin, async (req, res) => {
   console.log(res.locals);
   res.send({ messsage: "hello" });
 });

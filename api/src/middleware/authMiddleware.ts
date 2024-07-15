@@ -14,11 +14,15 @@ const isLoggedIn = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { token } = req.body;
     if (!token)
-      return res.status(401).json({ message: "Please Login to continue" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Please Login to continue" });
     const result = (await jwt.verify(token, config.ACCESS_TOKEN)) as jwtPayload;
     const user = await userModel.findById(result._id);
     if (!user)
-      return res.status(401).json({ message: "Invalid User! Unauthorized" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid User! Unauthorized" });
     res.locals.user = result;
 
     next();
@@ -29,5 +33,20 @@ const isLoggedIn = async (req: Request, res: Response, next: NextFunction) => {
       .json({ message: "Internal Server Error in Login Middleware", error });
   }
 };
-
-export { isLoggedIn };
+const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { user } = res.locals;
+    const isAdmin = await userModel.findById(user._id);
+    if (isAdmin?.role !== 1) {
+      return res
+        .status(401)
+        .send({ success: false, message: "Unauthorized Access" });
+    } else next();
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error in admin Middleware", error });
+  }
+};
+export { isLoggedIn, isAdmin };
