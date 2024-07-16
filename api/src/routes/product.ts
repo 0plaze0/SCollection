@@ -1,5 +1,5 @@
 import express from "express";
-import { dataValidation } from "../middlewares/validation";
+import { dataValidation } from "../middleware/validation";
 import {
   createProduct,
   getAllProduct,
