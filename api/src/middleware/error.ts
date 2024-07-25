@@ -8,6 +8,7 @@ export const errorHandler = (
   next: NextFunction
 ) => {
   // Handled errors
+  console.log("Global Error handler");
   if (err instanceof CustomError) {
     const { statusCode, errors, logging } = err;
     if (logging) {

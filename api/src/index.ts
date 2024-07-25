@@ -8,6 +8,7 @@ import { connectDB } from "./config/connectDB";
 
 import auth from "./routes/auth";
 import product from "./routes/product";
+import category from "./routes/category";
 import {
   ErrorRequestHandler,
   Request,
@@ -15,6 +16,7 @@ import {
   NextFunction,
 } from "express-serve-static-core";
 import { errorHandler } from "./middleware/error";
+import config from "./config/config";
 
 connectDB();
 
@@ -38,6 +40,7 @@ app.use(cors());
 
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/product", product);
+app.use("/api/v1/category", category);
 // app.use("*", async (req, res, next) => {
 //   const err = new HttpException(404, `cannot find ${req.originalUrl} url`);
 //   next(err);

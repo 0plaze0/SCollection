@@ -1,4 +1,5 @@
 import "dotenv/config";
+import { ConfigError } from "../errors/configError";
 
 interface ENV {
   MONGO_URI: string | undefined;
@@ -30,15 +31,25 @@ const getConfig = (): ENV => ({
 const getSatinizedConfig = (config: ENV): Config => {
   for (const [key, value] of Object.entries(config)) {
     if (value === undefined) {
-      throw new Error(`Missing key ${key} in .env`);
+      throw new ConfigError(`Missing key ${key} in .env`);
     }
   }
 
   return config as Config;
 };
+let satinizedConfig: Config;
 
-const config = getConfig();
-
-const satinizedConfig = getSatinizedConfig(config);
+try {
+  const config = getConfig();
+  satinizedConfig = getSatinizedConfig(config);
+} catch (error) {
+  if (error instanceof ConfigError) {
+    throw error; // Re-throw the ConfigError to be caught by the global error handler
+  }
+  // If it's not a ConfigError, wrap it in one
+  throw new ConfigError(
+    `Unexpected error in configuration: ${(error as Error).message}`
+  );
+}
 
 export default satinizedConfig;
