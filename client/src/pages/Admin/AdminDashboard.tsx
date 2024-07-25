@@ -11,7 +11,7 @@ const links: Navigation[] = [
 const AdminDashboard = () => {
   return (
     <div className="grid grid-cols-4 p-4 gap-2">
-      <div className="col-span-1 border-2 rounded border-gray-400 h-full">
+      <div className="col-span-1 border-2 rounded border-gray-400 h-[100vh]">
         <Sidebar links={links} />
       </div>
       <div className="col-span-3 p-4 w-full">

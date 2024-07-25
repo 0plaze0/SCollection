@@ -6,3 +6,4 @@ export { default as ForgotPassword } from "./ForgotPassword";
 export { default as ProductPage } from "./ProductPage";
 export { default as AdminDashboard } from "./Admin/AdminDashboard";
 export { default as AllProduct } from "./Admin/AllProduct";
+export { default as Category } from "./Admin/Category";

@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import {
   AdminDashboard,
   AllProduct,
+  Category,
   ForgotPassword,
   Login,
   Pagenotfound,
@@ -26,7 +27,7 @@ const App = () => {
           <Route path="admin" element={<AdminDashboard />}>
             <Route path="dashboard" element={<AllProduct />} />
             <Route path="create-product" element={<ProductForm />} />
-            <Route path="create-category" element={<h1>Create category</h1>} />
+            <Route path="create-category" element={<Category />} />
           </Route>
         </Route>
         <Route path="*" element={<Pagenotfound />} />
