@@ -12,12 +12,15 @@ interface jwtPayload {
 
 const isLoggedIn = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { token } = req.body;
-    if (!token)
+    const { accessToken } = req.cookies;
+    if (!accessToken)
       return res
         .status(401)
         .json({ success: false, message: "Please Login to continue" });
-    const result = (await jwt.verify(token, config.ACCESS_TOKEN)) as jwtPayload;
+    const result = (await jwt.verify(
+      accessToken,
+      config.ACCESS_TOKEN
+    )) as jwtPayload;
     const user = await userModel.findById(result._id);
     if (!user)
       return res

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { categoryModel } from "../model/category";
+import { categoryModel } from "../model/Category";
 
 import BadRequestError from "../errors/BadRequestError";
 import slugify from "slugify";
@@ -9,7 +9,8 @@ const createCategory = async (req: Request, res: Response) => {
   if (!name)
     throw new BadRequestError({ code: 400, message: "Please provide a name" });
   const duplicate = await categoryModel.find({ name });
-  if (duplicate)
+
+  if (duplicate.length != 0)
     return res
       .status(200)
       .json({ success: true, message: "Category Already exist" });
@@ -20,7 +21,7 @@ const createCategory = async (req: Request, res: Response) => {
 
   return res
     .status(200)
-    .json({ succes: true, message: "Successfully create category" });
+    .json({ success: true, message: "Successfully create category" });
 };
 
 const getCategory = async (req: Request, res: Response) => {

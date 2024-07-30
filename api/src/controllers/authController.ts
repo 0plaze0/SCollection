@@ -59,12 +59,19 @@ const authUser = async (req: Request, res: Response) => {
         }
       );
 
-      return res.status(200).send({
-        success: true,
-        message: "You are successfully login",
-        user,
-        token: accessToken,
-      });
+      const cookieOpts = {
+        sameSite: "lax",
+      } as const;
+
+      return res
+        .status(200)
+        .cookie("accessToken", accessToken, cookieOpts)
+        .send({
+          success: true,
+          message: "You are successfully login",
+          user,
+          token: accessToken,
+        });
     } else {
       res.status(401).json({
         success: false,

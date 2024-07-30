@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import "express-async-errors";
 
 import { connectDB } from "./config/connectDB";
@@ -36,7 +37,13 @@ const PORT = 3000;
 //middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cookieParser());
+app.use(
+  cors({
+    credentials: true,
+    origin: "http://localhost:5173",
+  })
+);
 
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/product", product);

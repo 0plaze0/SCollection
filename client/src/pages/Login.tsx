@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { AuthDetails, setAuth } from "../state/user/authSlice";
+import { RootState, AppDispatch } from "./../state/store";
 
 import { Input } from "../components";
 import { api } from "../api/api";
@@ -13,6 +16,9 @@ const Login = () => {
     }
   );
 
+  const auth = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch<AppDispatch>();
+
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,8 +30,14 @@ const Login = () => {
     e.preventDefault();
     try {
       const { data } = await api.post("/api/v1/auth/login", formData);
+
       if (data.success) {
-        navigate("/");
+        const auth: AuthDetails = {
+          user: data.user,
+          token: data.token,
+        };
+        dispatch(setAuth(auth));
+        //navigate("/");
         toast.success(data.message);
       }
     } catch (error) {
@@ -34,6 +46,7 @@ const Login = () => {
   };
   return (
     <>
+      {JSON.stringify(auth, null, 4)}
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
