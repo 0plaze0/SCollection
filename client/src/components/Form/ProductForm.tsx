@@ -1,6 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "./../../components";
 import { PhotoIcon } from "@heroicons/react/24/solid";
+import { api } from "../../api/api";
+import { toast } from "react-toastify";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Product } from "../../types/product";
+
+interface EditProduct extends Product {
+  name: string;
+  price: string;
+  description: string;
+  quantity: string;
+  category: string;
+  shipping: string;
+}
 
 const ProductForm = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +25,44 @@ const ProductForm = () => {
     shipping: "",
   });
   const [file, setFile] = useState<File | null>(null);
+  const [editing, setEditing] = useState<Boolean>(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const _id = location.state;
+
+  useEffect(() => {
+    if (_id) {
+      setEditing(true);
+    }
+  }, []);
+  useEffect(() => {
+    const fetchProductInfo = async () => {
+      try {
+        const { data } = await api.get(`/api/v1/product/get-product/${_id}`);
+        if (data.success) {
+          const {
+            name,
+            price,
+            description,
+            quantity,
+            category,
+            shipping,
+          }: EditProduct = data.product;
+          setFormData({
+            name,
+            price,
+            description,
+            quantity,
+            category,
+            shipping,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (_id) fetchProductInfo();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value }: { name: string; value: string } = e.target;
@@ -20,9 +71,23 @@ const ProductForm = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const newProduct = new FormData();
+    newProduct.append("name", formData.name);
+    newProduct.append("price", formData.price);
+    newProduct.append("description", formData.description);
+    newProduct.append("quantity", formData.quantity);
+    newProduct.append("category", formData.category);
+    newProduct.append("shipping", formData.shipping);
+    if (file) newProduct.append("file", file);
     try {
-      console.log(formData);
-      console.log(file);
+      const { data } = await api.post(
+        "/api/v1/product/create-product",
+        newProduct
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -32,9 +97,39 @@ const ProductForm = () => {
     if (e.target.files) setFile(e.target.files[0]);
   };
 
+  const handleUpdate = async (
+    e: React.FormEvent<HTMLFormElement>,
+    _id: string
+  ) => {
+    e.preventDefault();
+    const newProduct = new FormData();
+    newProduct.append("name", formData.name);
+    newProduct.append("price", formData.price);
+    newProduct.append("description", formData.description);
+    newProduct.append("quantity", formData.quantity);
+    newProduct.append("category", formData.category);
+    newProduct.append("shipping", formData.shipping);
+    if (file) newProduct.append("file", file);
+    try {
+      const { data } = await api.put(
+        `/api/v1/product/update-product/${_id}`,
+        newProduct
+      );
+      if (data.succes) {
+        toast.success(data.message);
+        navigate("admin/dashboard");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className=" w-full">
-      <form className="space-y-6" onSubmit={handleSubmit}>
+      <form
+        className="space-y-6"
+        onSubmit={(e) => (!editing ? handleSubmit(e) : handleUpdate(e, _id))}
+      >
         {/* Name */}
         <Input
           title="Name"
@@ -136,12 +231,21 @@ const ProductForm = () => {
         />
 
         <div>
-          <button
-            type="submit"
-            className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Create
-          </button>
+          {!editing ? (
+            <button
+              type="submit"
+              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Create
+            </button>
+          ) : (
+            <button
+              type="submit"
+              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Update
+            </button>
+          )}
         </div>
       </form>
     </div>

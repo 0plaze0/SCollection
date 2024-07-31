@@ -48,6 +48,7 @@ const updateProduct = async (req: Request<{}, {}, Product>, res: Response) => {
       return res
         .status(404)
         .json({ success: false, message: "Please send a valid Id" });
+
     const { name, price, description, category, quantity, shipping } = req.body;
 
     const updateData: Partial<Product> = {
@@ -72,7 +73,7 @@ const updateProduct = async (req: Request<{}, {}, Product>, res: Response) => {
       updateData.image = { id: photo.public_id, url: photo.secure_url };
     }
 
-    result = await productModel.findByIdAndUpdate(id, updateProduct, {
+    result = await productModel.findByIdAndUpdate(id, updateData, {
       new: true,
     });
 
@@ -109,13 +110,6 @@ const getProduct = async (req: Request<{}, {}, Product>, res: Response) => {
 
 const getAllProduct = async (req: Request<{}, {}, Product>, res: Response) => {
   try {
-    const { id } = req.params as { id: string }; //type assertion
-
-    if (!id)
-      return res
-        .status(404)
-        .json({ success: false, message: "Please send a valid Id" });
-
     const products = await productModel.find({});
 
     return res.status(200).json({ success: true, products });
@@ -127,4 +121,32 @@ const getAllProduct = async (req: Request<{}, {}, Product>, res: Response) => {
   }
 };
 
-export { createProduct, updateProduct, getProduct, getAllProduct };
+const deleteProduct = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const product = await productModel.findByIdAndDelete(id);
+
+    if (product)
+      await cloudinary.uploader.destroy(product?.image?.id as string, {
+        invalidate: true,
+      });
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Product Deleted Successfully" });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Error while getting product" });
+  }
+};
+
+export {
+  createProduct,
+  updateProduct,
+  getProduct,
+  getAllProduct,
+  deleteProduct,
+};

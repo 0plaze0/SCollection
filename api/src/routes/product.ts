@@ -5,6 +5,7 @@ import {
   getAllProduct,
   getProduct,
   updateProduct,
+  deleteProduct,
 } from "./../controllers/productController";
 import { productSchema } from "../schemas/productSchema";
 import { upload } from "../config/multer";
@@ -20,8 +21,9 @@ router.post(
 );
 
 router.put("/update-product/:id", upload.single("file"), updateProduct);
-router.get("/get-product", getAllProduct);
+router.get("/get-all-product", getAllProduct);
 router.get("/get-product/:id", getProduct);
+router.delete("/delete-product/:id", deleteProduct);
 router.get("/test-user", isLoggedIn, isAdmin, async (req, res) => {
   console.log(res.locals);
   res.send({ messsage: "hello" });
